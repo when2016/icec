@@ -6,7 +6,8 @@
 	交流群1：15643354
 	
 ## icec开发团队
-	xxjin 
+	xxjin
+	https://www.oschina.net/p/icec 
 ## 系统说明(研发中)
 ###	实现的功能：
 	登入登出（已完成）
