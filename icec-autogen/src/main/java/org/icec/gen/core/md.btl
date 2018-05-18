@@ -1,0 +1,31 @@
+pageQuery
+===
+* 分页查询
+ 
+	select
+	\@pageTag(){
+	#use("cols")#  
+	\@} 
+	from  ${table}
+	where #use("condition")#
+
+sample
+===
+* 注释
+
+	select #use("cols")# from ${table} where #use("condition")#
+
+cols
+===
+
+	${cols}
+
+updateSample
+===
+
+	${updateSample}
+
+condition
+===
+
+	 ${condition}

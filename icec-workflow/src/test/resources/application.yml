@@ -1,0 +1,21 @@
+server:
+  port: 8080
+security:
+  basic:
+    enabled: false
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/icec?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull
+    username: icec
+    password: icec
+
+    
+icec: 
+  upload: 
+    path: 
+
+    
+    
+default_page_size: 10

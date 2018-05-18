@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/layout :: common_header(~{::title},~{::link})">
+<title>模型管理</title>
+ <!-- 
+  additional css  -->
+	
+</head>
+ 
+<body>
+	<div class="main-container">
+		<div class="main-content-inner">
+			<div class="page-content">
+			 
+				 
+				<div class="row">
+					<div class="col-xs-12">
+						<form action="" class="form-inline" id="userForm">
+							  <label>模型分类：</label>
+							  <select id="category" name="category">
+							  <option value="">全部分类</option>
+								<option value="1">常用流程</option>
+								<option value="2">办公流程</option>
+							</select>
+							
+							<button class="btn btn-primary btn-rounded btn-outline btn-sm "
+							 type="button"	onclick="search()">
+								<i class="fa fa-search"></i> 查询
+							</button>
+							 
+						</form>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="pull-left">
+							<button class="btn btn-success btn-sm" data-toggle="tooltip"
+								data-placement="left" onclick="add()" title="添加">
+								<i class="fa fa-plus"></i> 添加模型
+							</button>
+
+						</div>
+						<div class="pull-right"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<table id="usertable"  data-toggle="table" data-side-pagination="server" 
+						data-striped="true"  data-query-params="queryParams" data-pagination-loop="false"
+               			data-page-number="1" data-data-field="list" data-total-field="totalRows"
+               			data-content-type="application/x-www-form-urlencoded" data-click-to-select="true"
+               			data-pagination="true" data-method="post"  th:data-url="@{/workflow/models/getList}"  >
+               			<thead>
+										<tr>
+											<th   data-field="id"   > 模型ID</th>
+											<th class="center" data-field="category">流程分类</th>
+											<th data-field="key">模型标识</th>
+											<th data-field="name">模型名称</th>
+											<th class="hidden-480" data-field="version">版本号</th>
+											<th data-field="createTime">创建时间</th>
+											<th data-field="lastUpdateTime"><i
+												class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+												最后更新时间</th>
+												<th data-field="deploymentId">部署Id</th>
+											 <th data-field="id" data-formatter="optFormatter">操作</th>  
+										</tr>
+									</thead>
+						</table>
+					</div>
+				</div>
+				</div>
+				 
+				<!-- /.col -->
+			 
+
+		</div>
+		<!-- end main container -->
+	</div>
+
+<div th:replace="common/commonJS"></div>
+ 
+ 
+ 	 <script>
+ 	 function optFormatter(value,row,index){
+     	return "<div class='hidden-sm hidden-xs btn-group'>"+
+     	"<button class='btn btn-xs btn-info' onclick='editModel("+value+")'>设计</button>"
+     	+"<button class='btn btn-xs btn-success' onclick='deploy("+value+")'>发布</button>"
+     	+"<button class='btn btn-xs btn-danger' onclick='del("+value+")'>删除</button>"
+     	
+     	+"</div>"
+     	
+     }
+ 	 /**
+ 	 部署模型
+ 	 **/
+ 	 function deploy(id){
+ 		$.post(ctx+"workflow/models/deployment/"+id,function(result){
+ 			if(result.code== 0){
+ 				jp.alert("部署成功");
+ 				search();
+ 			}else{
+ 				jp.alert(result.message);
+ 			}
+ 		}) 
+ 	 } 
+ 	 /**
+ 		 删除模型
+  	 **/
+  	 function del(id){
+ 		 jp.confirm("确定要删除该模型吗？",function(){
+ 			$.post(ctx+"workflow/models/delete/"+id,function(result){
+ 	  			if(result.code== 0){
+ 	  				jp.alert("删除成功");
+ 	  				search();
+ 	  			}else{
+ 	  				jp.alert(result.message);
+ 	  			}
+ 	  		})  
+ 		 });
+  		
+  	 }
+  	 /**
+		 添加模型
+	 **/
+ 	 function add(){
+     	jp.openWindow("新增"+'模型',ctx+"workflow/models/addModel","800px", "520px");
+     }
+	 function queryParams(params){
+		 var temp = $("#userForm").serializeJSON();
+		 temp.pageSize=params.limit;   //页面大小
+		 temp.pageNumber=(params.offset / params.limit) + 1;   //页码  
+		 temp.sort=params.sort;      //排序列名  
+		 temp.sortOrder=	 params.order; //排位命令（desc，asc）
+		 return temp; 
+	 }
+	 function editModel(id){
+	     	jp.openWindow("编辑"+'模型',ctx+"modeler.html?modelId="+id,"800px", "520px");
+	     }
+  
+    function search(){
+    	$('#usertable').bootstrapTable('refresh');
+    }
+ 
+	 $(function () {
+	     });
+</script>
+</body>
+</html>

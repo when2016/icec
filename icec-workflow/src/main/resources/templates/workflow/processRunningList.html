@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/layout :: common_header(~{::title},~{::link})">
+<title>正在运行流程</title>
+ <!-- 
+  additional css  -->
+	
+</head>
+ 
+<body>
+	<div class="main-container">
+		<div class="main-content-inner">
+			<div class="page-content">
+			 
+				 
+				<div class="row">
+					<div class="col-xs-12">
+						<form action="" class="form-inline" id="userForm">
+							 <div class="form-group">
+								<label>流程实例ID：</label><input type="text" id="procInsId" name="procInsId" value="" class="form-control">
+								<label>流程定义Key：</label><input type="text" id="procDefKey" name="procDefKey" value="" class="form-control">
+							</div>
+							
+							<button class="btn btn-primary btn-rounded btn-outline btn-sm "
+							 type="button"	onclick="search()">
+								<i class="fa fa-search"></i> 查询
+							</button>
+							 
+						</form>
+					</div>
+				</div>
+			 
+				<div class="row">
+					<div class="col-xs-12">
+						<table id="usertable"  data-toggle="table" data-side-pagination="server" 
+						data-striped="true"  data-query-params="queryParams" data-pagination-loop="false"
+               			data-page-number="1" data-data-field="list" data-total-field="totalRows"
+               			data-content-type="application/x-www-form-urlencoded" data-click-to-select="true"
+               			data-pagination="true" data-method="post"  th:data-url="@{/workflow/process/processRunningList}"  >
+               			<thead>
+										<tr>
+											<th   data-field="id"   data-formatter="resourceFormatter"> 模型ID</th>
+											<th class="center" data-field="category">流程分类</th>
+											<th data-field="key">模型标识</th>
+											<th data-field="name">模型名称</th>
+											<th class="hidden-480" data-field="version">版本号</th>
+											<th data-field="deploymentTime"><i
+												class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+												部署时间</th>
+												<th data-field="deploymentId">部署Id</th>
+											 <th data-field="id" data-formatter="optFormatter">操作</th>  
+										</tr>
+									</thead>
+						</table>
+					</div>
+				</div>
+				</div>
+				 
+				<!-- /.col -->
+			 
+
+		</div>
+		<!-- end main container -->
+	</div>
+
+<div th:replace="common/commonJS"></div>
+ 
+ 
+ 	 <script>
+ 	 function optFormatter(value,row,index){
+     	return "<div class='hidden-sm hidden-xs btn-group'>"+
+     	"<button class='btn btn-xs btn-info' onclick='editModel("+value+")'>挂起</button>"
+     	
+     	+"<button class='btn btn-xs btn-danger' onclick='del("+value+")'>删除</button>"
+     	
+     	+"</div>"
+     	
+     }
+ 	 function resourceFormatter(value,row,index){
+ 		 
+ 		return "<a href='#' onclick=showImg(\""+value+"\")>"+value+"</a>";
+ 	 }
+ 	 function showImg(procDefId){
+ 		var url=ctx+"workflow/process/resource?resType=image&procDefId="+procDefId;
+ 		jp.openWindow("流程图",url,"600px","400px");
+ 	 }
+ 	 /**
+ 	 部署模型
+ 	 **/
+ 	 function deploy(id){
+ 		$.post(ctx+"workflow/models/deployment/"+id,function(result){
+ 			if(result.code== 0){
+ 				jp.alert("部署成功");
+ 				search();
+ 			}else{
+ 				jp.alert(result.message);
+ 			}
+ 		}) 
+ 	 } 
+ 	 /**
+ 		 删除模型
+  	 **/
+  	 function del(id){
+ 		 jp.confirm("确定要删除该模型吗？",function(){
+ 			$.post(ctx+"workflow/models/delete/"+id,function(result){
+ 	  			if(result.code== 0){
+ 	  				jp.alert("删除成功");
+ 	  				search();
+ 	  			}else{
+ 	  				jp.alert(result.message);
+ 	  			}
+ 	  		})  
+ 		 });
+  		
+  	 }
+  	 /**
+		 添加模型
+	 **/
+ 	 function add(){
+     	jp.openWindow("新增"+'模型',ctx+"workflow/models/addModel","800px", "520px");
+     }
+	 function queryParams(params){
+		 var temp = $("#userForm").serializeJSON();
+		 temp.pageSize=params.limit;   //页面大小
+		 temp.pageNumber=(params.offset / params.limit) + 1;   //页码  
+		 temp.sort=params.sort;      //排序列名  
+		 temp.sortOrder=	 params.order; //排位命令（desc，asc）
+		 return temp; 
+	 }
+	 function editModel(id){
+	     	jp.openWindow("编辑"+'模型',ctx+"modeler.html?modelId="+id,"800px", "520px");
+	     }
+  
+    function search(){
+    	$('#usertable').bootstrapTable('refresh');
+    }
+ 	
+	 $(function () {
+	     });
+</script>
+</body>
+</html>

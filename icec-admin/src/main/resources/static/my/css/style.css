@@ -1,0 +1,39 @@
+em.required{color:red;font-style:normal;}  
+label.error {
+	color: #cc5965;
+	display: inline-block;
+	margin-left: 5px
+}
+
+.form-control.error {
+	border: 1px dotted #cc5965
+}
+ 
+
+.J_menuTab {
+	-webkit-transition: all .3s ease-out 0s;
+	transition: all .3s ease-out 0s
+}
+
+::-webkit-scrollbar-track {
+	background-color: #F5F5F5
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+	background-color: #F5F5F5
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: #999
+}
+
+ 
+ .row {
+  margin-left: -5px;
+  margin-right: -5px;
+}
+ .help-block, .help-inline {
+    color: #aaaaaa;
+}
+ 

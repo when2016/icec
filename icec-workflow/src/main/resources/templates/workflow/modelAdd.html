@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/layout :: common_header(~{::title},~{::link})">
+<title>模型管理</title>
+<!-- 
+  additional css  -->
+
+</head>
+
+<body>
+	<div class="main-container">
+		<div class="main-content-inner">
+			<div class="page-content">
+
+
+				<form id="inputForm" th:action="@{/workflow/models/newModel}" method="post" class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">流程分类：</label>
+						<div class="controls">
+							<select id="category" name="category"
+								class="required form-control ">
+
+								<option value="1">常用流程</option>
+
+								<option value="2">办公流程</option>
+
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">模块名称：</label>
+						<div class="controls">
+							<input id="name" name="name" type="text"
+								class="form-control required" /> <span class="help-inline"></span>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">模块标识：</label>
+						<div class="controls">
+							<input id="key" name="key" type="text"
+								class="form-control required" /> <span class="help-inline"></span>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">模块描述：</label>
+						<div class="controls">
+							<textarea id="description" name="description"
+								class="form-control required"></textarea>
+						</div>
+					</div>
+					<div class="clearfix ">
+						<div class="center">
+							<button class="btn btn-info" type="submit" id="submitBtn">
+								<i class="ace-icon fa fa-check bigger-110"></i> 保存
+							</button>
+
+							&nbsp; &nbsp; &nbsp;
+							<button class="btn" type="button" id="closeWin">
+								<i class="ace-icon fa fa-del bigger-110"></i> 关闭
+							</button>
+						</div>
+					</div>
+				</form>
+
+
+
+			</div>
+		</div>
+		<!-- end main container -->
+	</div>
+
+	<div th:replace="common/commonJS"></div>
+
+
+	<script>
+	var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+	//关闭iframe
+	$('#closeWin').click(function() {
+		top.layer.close(index);
+	});
+		$(function() {
+			$("#inputForm").validate({
+				submitHandler : function(form) {
+					//验证通过后 的js代码写在这里 
+					$(form).ajaxSubmit({
+						dataType : "json",
+						success : function(result) {
+							if (result.code == 0) {
+								top.layer.alert('保存成功')
+								top.layer.closeAll();
+								top.getActiveTab()[0].contentWindow.search();
+								top.getActiveTab()[0].contentWindow.editModel(result.data);
+							} else {
+								top.layer.alert('保存失败')
+							}
+
+						},
+						error : function(xhr, status, error) {
+							top.layer.alert('操作失败');
+						}
+					});
+
+				}
+			});
+		});
+	</script>
+</body>
+</html>

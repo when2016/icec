@@ -1,0 +1,11 @@
+<included>
+	<logger name="javax.activation" level="INFO" />
+	<logger name="javax.mail" level="WARN" />
+	<logger name="com.sun" level="INFO" />
+	<logger name="org.hibernate" level="INFO" />
+	<logger name="org.springframework"  level="error"  /> 
+	<logger name="org.eclipse" level="INFO" />
+	<logger name="org.apache.http" level="INFO" />
+	<logger name="org.thymeleaf" level="INFO" />
+</included>
+
