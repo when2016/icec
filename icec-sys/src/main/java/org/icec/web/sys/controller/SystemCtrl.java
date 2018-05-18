@@ -28,67 +28,72 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 
 @Controller
 public class SystemCtrl {
-	private static final Logger log = LoggerFactory.getLogger(SystemCtrl.class);
-	@Autowired
-	private SysGlobalService sysGlobalService;
-	@Autowired  
-	DefaultKaptcha defaultKaptcha;
-    @RequestMapping("kaptcha.jpg")
-    public void getKaptchaImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        response.setDateHeader("Expires", 0);
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setContentType("image/jpeg");
+  private static final Logger log = LoggerFactory.getLogger(SystemCtrl.class);
+  @Autowired
+  private SysGlobalService sysGlobalService;
+  @Autowired
+  DefaultKaptcha defaultKaptcha;
 
-        String capText = defaultKaptcha.createText();
-        request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
+  @RequestMapping("kaptcha.jpg")
+  public void getKaptchaImage(HttpServletRequest request, HttpServletResponse response)
+      throws Exception {
 
-        try (ServletOutputStream out = response.getOutputStream()) {
-            ImageIO.write(defaultKaptcha.createImage(capText), "jpg", out);
-            out.flush();
-        } 
+    response.setDateHeader("Expires", 0);
+    response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setContentType("image/jpeg");
 
-      
+    String capText = defaultKaptcha.createText();
+    request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
+
+    try (ServletOutputStream out = response.getOutputStream()) {
+      ImageIO.write(defaultKaptcha.createImage(capText), "jpg", out);
+      out.flush();
     }
-	
-	@GetMapping("sys/login")
-	public String login(@ModelAttribute("msg") String msg ,ModelMap model) {
-		
-		model.addAttribute("msg", msg);
-		SysGlobal global = sysGlobalService.getGlobal();
-		model.addAttribute("global", global);
-		return "sys/login";
-	}
 
-	@PostMapping("sys/login")
-	public String dologin(HttpServletRequest request, HttpServletResponse response,RedirectAttributes model) {
-		if (SecurityUtils.getSubject().isAuthenticated()) {
-			SysUser user=(SysUser)SecurityUtils.getSubject().getPrincipal();
-			log.info("登入成功"+user.getName());
-			return "redirect:/";
-		} else {
-			log.info("登入失败");
-			String exception = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-			// String message =
-			// (String)request.getAttribute(FormAuthenticationFilter.DEFAULT_MESSAGE_PARAM);
-			if(IncorrectCaptchaException.class.getName().equals(exception)) {
-				model.addFlashAttribute("msg", "验证码错误");
-			}else if(LockedAccountException.class.getName().equals(exception)) {
-				model.addFlashAttribute("msg", "账户已冻结");
-			}else {
-				model.addFlashAttribute("msg", "用户名或密码错误");
-			}
-			return "redirect:/sys/login";
-		}
 
-	}
+  }
 
-	@GetMapping("sys/logout")
-	public String logout() {
-		SysUser user = (SysUser) SecurityUtils.getSubject().getPrincipal();
-		log.info("登出:" + user.getLoginName());
-		SecurityUtils.getSubject().logout();
-		return "redirect:/sys/login";
-	}
+  @GetMapping("sys/login")
+  public String login(@ModelAttribute("msg") String msg, ModelMap model) {
+
+    model.addAttribute("msg", msg);
+    SysGlobal global = sysGlobalService.getGlobal();
+    model.addAttribute("global", global);
+    return "sys/login";
+  }
+
+  @PostMapping("sys/login")
+  public String dologin(HttpServletRequest request, HttpServletResponse response,
+      RedirectAttributes model) {
+    if (SecurityUtils.getSubject().isAuthenticated()) {
+      SysUser user = (SysUser) SecurityUtils.getSubject().getPrincipal();
+      log.info("登入成功" + user.getName());
+      return "redirect:/";
+    } else {
+      log.info("登入失败");
+      String exception = (String) request
+          .getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+      // String message =
+      // (String)request.getAttribute(FormAuthenticationFilter.DEFAULT_MESSAGE_PARAM);
+      if (IncorrectCaptchaException.class.getName().equals(exception)) {
+        model.addFlashAttribute("msg", "验证码错误");
+      } else if (LockedAccountException.class.getName().equals(exception)) {
+        model.addFlashAttribute("msg", "账户已冻结");
+      } else {
+        model.addFlashAttribute("msg", "用户名或密码错误");
+      }
+      return "redirect:/sys/login";
+    }
+
+  }
+
+  @GetMapping("sys/logout")
+  public String logout() {
+    SysUser user = (SysUser) SecurityUtils.getSubject().getPrincipal();
+    log.info("登出:" + user.getLoginName());
+    SecurityUtils.getSubject().logout();
+    return "redirect:/sys/login";
+  }
 }

@@ -123,8 +123,5 @@
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:4.3.12.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.icec:icec-schedule:0.0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.icec:icec-workflow:0.0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.icec:icec-oa:0.0.1-SNAPSHOT" level="project" />
   </component>
 </module>
