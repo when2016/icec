@@ -55,4 +55,17 @@ public class IndexCtrl {
 	public String error() {
 		throw new IcecException(500, "Sam 错误");
 	}
+
+
+	@GetMapping({ "/h5", "/ueditor" })
+	public String h5(@CurrentUser SysUser user, ModelMap model) {
+		model.addAttribute("user", user);
+		List<SysMenu> menuList = sysMenuService.findMenuByUserId(user.getId());
+		List<TreeModel> tree = TreeBuild.buildTree(menuList);
+		model.addAttribute("menuList", tree);
+		SysGlobal global = sysGlobalService.getGlobal();
+		model.addAttribute("global", global);
+		return "h5/demo";
+	}
+
 }
